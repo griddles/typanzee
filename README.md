@@ -29,10 +29,10 @@ one day i wondered if you could use monkeytype offline, and found out that you c
 not yet, i havent made a proper release build. you can once i do
 
 #### can I steal your code?
-yeah, credit me if you want but you dont have to, all the code is stolen from stackoverflow anyway
+yeah
 
 #### can I steal the name/branding?
-no, that could get confusing or weird, and i dont want people to make my program look bad by making awful ones with the same name
+no
 
 #### can I help?
 not right now, its not a big enough project to warrant multiple people working on it. maybe in the future though.
