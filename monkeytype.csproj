@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net7.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="Fonts\RobotoMono-Bold.ttf" />
+      <None Remove="Fonts\RobotoMono-BoldItalic.ttf" />
+      <None Remove="Fonts\RobotoMono-ExtraLight.ttf" />
+      <None Remove="Fonts\RobotoMono-ExtraLightItalic.ttf" />
+      <None Remove="Fonts\RobotoMono-Italic.ttf" />
+      <None Remove="Fonts\RobotoMono-Light.ttf" />
+      <None Remove="Fonts\RobotoMono-LightItalic.ttf" />
+      <None Remove="Fonts\RobotoMono-Medium.ttf" />
+      <None Remove="Fonts\RobotoMono-MediumItalic.ttf" />
+      <None Remove="Fonts\RobotoMono-Regular.ttf" />
+      <None Remove="Fonts\RobotoMono-SemiBold.ttf" />
+      <None Remove="Fonts\RobotoMono-SemiBoldItalic.ttf" />
+      <None Remove="Fonts\RobotoMono-Thin.ttf" />
+      <None Remove="Fonts\RobotoMono-ThinItalic.ttf" />
+      <None Remove="logo.png" />
+      <None Remove="restart.png" />
+      <None Remove="restartMask.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="Fonts\RobotoMono-Bold.ttf" />
+      <Resource Include="Fonts\RobotoMono-BoldItalic.ttf" />
+      <Resource Include="Fonts\RobotoMono-ExtraLight.ttf" />
+      <Resource Include="Fonts\RobotoMono-ExtraLightItalic.ttf" />
+      <Resource Include="Fonts\RobotoMono-Italic.ttf" />
+      <Resource Include="Fonts\RobotoMono-Light.ttf" />
+      <Resource Include="Fonts\RobotoMono-LightItalic.ttf" />
+      <Resource Include="Fonts\RobotoMono-Medium.ttf" />
+      <Resource Include="Fonts\RobotoMono-MediumItalic.ttf" />
+      <Resource Include="Fonts\RobotoMono-Regular.ttf" />
+      <Resource Include="Fonts\RobotoMono-SemiBold.ttf" />
+      <Resource Include="Fonts\RobotoMono-SemiBoldItalic.ttf" />
+      <Resource Include="Fonts\RobotoMono-Thin.ttf" />
+      <Resource Include="Fonts\RobotoMono-ThinItalic.ttf" />
+      <Resource Include="logo.png" />
+      <Resource Include="restart.png" />
+      <Resource Include="restartMask.png" />
+    </ItemGroup>
+
+</Project>
