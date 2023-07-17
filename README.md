@@ -2,15 +2,16 @@
 a local desktop program in c# designed to work like monkeytype
 
 ### current functionality:
- - typing (25w only)
+ - typing
  - wpm counter
  - timer
  - restarting tests
+ - different test lengths
+ - time and words testing modes
 
 ### planned functionality:
- - different test lengths
  - save scores locally
- - different test types (time, words, etc.)
+ - more test types (zen, custom, multiplayer?)
  - custom themes
  - custom fonts
  - probably more stuff, i eventually would like it to have most of the same functionality as monkeytype
