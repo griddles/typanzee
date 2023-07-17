@@ -5,21 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:monkeytype"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1080" Width="1920" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+        Title="MainWindow" Height="1080" Width="1920" ScrollViewer.VerticalScrollBarVisibility="Disabled" WindowState="Maximized">
     <Window.Resources>
         <Style x:Key="RobotoMono">
             <Setter Property="TextElement.FontFamily" Value="Fonts/#Roboto Mono"/>
         </Style>
     </Window.Resources>
     <Grid Background="black">
-        <Label Name="logoType" Content="typanzee" Style="{DynamicResource RobotoMono}" FontSize="54" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Height="80" Width="275" Margin="110,10,0,0" Foreground="Gainsboro" />
-        <TextBlock Name="typeText" Style="{DynamicResource RobotoMono}" FontSize="36" FontWeight="Normal" Height="400" Width="1000" MaxWidth="1000" MaxHeight="400" MinWidth="300" MinHeight="150" Foreground="Gainsboro" TextWrapping="Wrap" />
+        <Label x:Name="logo" Content="typanzee" Style="{DynamicResource RobotoMono}" FontSize="54" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Height="80" Width="275" Margin="110,10,0,0" Foreground="Gainsboro" />
+        <TextBlock x:Name="typeText" Style="{DynamicResource RobotoMono}" FontSize="36" FontWeight="Normal" Height="400" Width="1000" MaxWidth="1000" MaxHeight="400" MinWidth="300" MinHeight="150" Foreground="Gainsboro" TextWrapping="Wrap" />
 
-        <TextBox x:Name="textInput" Text="" HorizontalAlignment="Center" VerticalAlignment="Center" Height="400" Width="1000" Opacity="0" TextChanged="textInput_TextChanged"/>
-        <Label x:Name="timeLabel" Content="00:00.000" Style="{DynamicResource RobotoMono}" HorizontalAlignment="Center" Height="80" VerticalAlignment="Center" Width="400" Foreground="Gainsboro" Margin="0,0,0,690" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="48"/>
-        <Label x:Name="wpmLabel" Content="0" Style="{DynamicResource RobotoMono}" HorizontalAlignment="Center" Height="80" VerticalAlignment="Center" Width="400" Foreground="Gainsboro" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="48" Margin="0,0,0,500"/>
+        <TextBox x:Name="textInput" Style="{DynamicResource RobotoMono}" FontSize="36" Text="" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" Height="400" Width="1000" Opacity="0" TextChanged="textInput_TextChanged" Background="Transparent" Foreground="Gainsboro"/>
+        
+        <Label x:Name="timeLabel" Content="00:00.000" Style="{DynamicResource RobotoMono}" HorizontalAlignment="Center" Height="80" VerticalAlignment="Top" Width="309" Foreground="Gainsboro" Margin="0,10,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="48"/>
+        <Label x:Name="wpmLabel" Content="0" Style="{DynamicResource RobotoMono}" HorizontalAlignment="Center" Height="80" VerticalAlignment="Top" Width="130" Foreground="Gainsboro" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="48" Margin="0,90,0,0"/>
         <Image HorizontalAlignment="Left" Height="100" Margin="10,-8,0,0" VerticalAlignment="Top" Width="100" Source="/logo.png"/>
         <Image HorizontalAlignment="Right" Height="48" Margin="0,19,25,0" VerticalAlignment="Top" Width="48" Source="/restart.png" MouseDown="restartButton_MouseDown"/>
+        <Label x:Name="word10" Content="10" Style="{DynamicResource RobotoMono}" HorizontalAlignment="Left" Margin="66,0,0,10" VerticalAlignment="Bottom" Foreground="DarkSlateGray" Height="48" Width="50" FontSize="32" MouseDown="word10_MouseDown"/>
+        <Label x:Name="word25" Content="25" Style="{DynamicResource RobotoMono}" HorizontalAlignment="Left" Margin="120,0,0,10" VerticalAlignment="Bottom" Foreground="Gainsboro" Height="48" Width="50" FontSize="32" MouseDown="word25_MouseDown"/>
+        <Label x:Name="word50" Content="50" Style="{DynamicResource RobotoMono}" HorizontalAlignment="Left" Margin="176,0,0,10" VerticalAlignment="Bottom" Foreground="DarkSlateGray" Height="48" Width="50" FontSize="32" MouseDown="word50_MouseDown"/>
+        <Label x:Name="word100" Content="100" Style="{DynamicResource RobotoMono}" HorizontalAlignment="Left" Margin="230,0,0,10" VerticalAlignment="Bottom" Foreground="DarkSlateGray" Height="48" Width="74" FontSize="32" MouseDown="word100_MouseDown"/>
+        <Image HorizontalAlignment="Left" Height="36" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="36" Source="/Images/words.png"/>
+        <Image HorizontalAlignment="Left" Height="36" Margin="10,0,0,69" VerticalAlignment="Bottom" Width="36" Source="/Images/time.png"/>
+        <Label x:Name="time15" Content="15" Style="{DynamicResource RobotoMono}" HorizontalAlignment="Left" Margin="66,0,0,63" VerticalAlignment="Bottom" Foreground="DarkSlateGray" Height="48" Width="50" FontSize="32" MouseDown="time15_MouseDown"/>
+        <Label x:Name="time30" Content="30" Style="{DynamicResource RobotoMono}" HorizontalAlignment="Left" Margin="120,0,0,63" VerticalAlignment="Bottom" Foreground="DarkSlateGray" Height="48" Width="50" FontSize="32" MouseDown="time30_MouseDown"/>
+        <Label x:Name="time60" Content="60" Style="{DynamicResource RobotoMono}" HorizontalAlignment="Left" Margin="176,0,0,63" VerticalAlignment="Bottom" Foreground="DarkSlateGray" Height="48" Width="50" FontSize="32" MouseDown="time60_MouseDown"/>
+        <Label x:Name="time120" Content="120" Style="{DynamicResource RobotoMono}" HorizontalAlignment="Left" Margin="230,0,0,63" VerticalAlignment="Bottom" Foreground="DarkSlateGray" Height="48" Width="74" FontSize="32" MouseDown="time120_MouseDown"/>
 
     </Grid>
 </Window>
