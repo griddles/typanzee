@@ -27,11 +27,15 @@ namespace monkeytype
 
         public int currentWordCount = 25;
 
-        public string mode = "words";
+        public string mode = "word";
+        public Label previousMode;
+        public int testDuration = 30;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            previousMode = word25;
             
             wpmTimer.Tick += new EventHandler(wpmTimer_Tick);
             wpmTimer.Interval = new TimeSpan(0, 0, 0, 0, 25);
@@ -87,6 +91,10 @@ namespace monkeytype
                     textInput.Text = textInput.Text.Substring(line1Index);
                     textInput.CaretIndex = textInput.Text.Length;
                 }
+                if (typingTest.Length < 800 && mode == "time")
+                {
+                    typingTest += " " + RandomWords(wordList, 25);
+                }
             }
             catch
             {
@@ -119,11 +127,11 @@ namespace monkeytype
 
             typeText.Inlines.Add(new Run(typingTest.Substring(textInput.Text.Length)) { Foreground = Brushes.Gainsboro });
 
-            if (testStarted && typedText.Length == typingTest.Length)
+            TimeSpan currentTime = DateTime.Now.Subtract(startTime);
+            if (testStarted && mode == "word" && typedText.Length == typingTest.Length)
             {
                 wpmTimer.Stop();
-
-                TimeSpan currentTime = DateTime.Now.Subtract(startTime);
+                textInput.IsReadOnly = true;
 
                 timeLabel.Content = string.Format("{0:00}:{1:00}.{2:000}", currentTime.Minutes, currentTime.Seconds, currentTime.Milliseconds);
             }
@@ -150,12 +158,20 @@ namespace monkeytype
             {
                 // do nothing hehe
             }
+
+            if (testStarted && mode == "time" && (currentTime.Seconds + (currentTime.Minutes * 60)) >= testDuration)
+            {
+                wpmTimer.Stop();
+                textInput.IsReadOnly = true;
+                timeLabel.Content = string.Format("{0:00}:{1:00}.{2:000}", currentTime.Minutes, currentTime.Seconds, 0);
+            }
         }
 
         private void Restart(int wordCount)
         {
             textInput.Text = "";
             testStarted = false;
+            textInput.IsReadOnly = false;
             typingTest = RandomWords(wordList, wordCount);
             typeText.Text = typingTest.ToLower();
             textInput.MaxLength = typingTest.Length;
@@ -166,75 +182,79 @@ namespace monkeytype
 
         private void word10_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            mode = "word";
             currentWordCount = 10;
             word10.Foreground = Brushes.Gainsboro;
-            word25.Foreground = Brushes.DarkSlateGray;
-            word50.Foreground = Brushes.DarkSlateGray; 
-            word100.Foreground = Brushes.DarkSlateGray;
+            previousMode.Foreground = Brushes.DarkSlateGray;
+            previousMode = word10;
             Restart(currentWordCount);
         }
         private void word25_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            mode = "word";
             currentWordCount = 25;
-            word10.Foreground = Brushes.DarkSlateGray;
             word25.Foreground = Brushes.Gainsboro;
-            word50.Foreground = Brushes.DarkSlateGray;
-            word100.Foreground = Brushes.DarkSlateGray;
+            previousMode.Foreground = Brushes.DarkSlateGray;
+            previousMode = word25;
             Restart(currentWordCount);
         }
         private void word50_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            mode = "word";
             currentWordCount = 50;
-            word10.Foreground = Brushes.DarkSlateGray;
-            word25.Foreground = Brushes.DarkSlateGray;
             word50.Foreground = Brushes.Gainsboro;
-            word100.Foreground = Brushes.DarkSlateGray;
+            previousMode.Foreground = Brushes.DarkSlateGray;
+            previousMode = word50;
             Restart(currentWordCount);
         }
         private void word100_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            mode = "word";
             currentWordCount = 100;
-            word10.Foreground = Brushes.DarkSlateGray;
-            word25.Foreground = Brushes.DarkSlateGray;
-            word50.Foreground = Brushes.DarkSlateGray;
             word100.Foreground = Brushes.Gainsboro;
+            previousMode.Foreground = Brushes.DarkSlateGray;
+            previousMode = word100;
             Restart(currentWordCount);
         }
 
         private void time15_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            currentWordCount = 10;
-            word10.Foreground = Brushes.Gainsboro;
-            word25.Foreground = Brushes.DarkSlateGray;
-            word50.Foreground = Brushes.DarkSlateGray;
-            word100.Foreground = Brushes.DarkSlateGray;
+            mode = "time";
+            testDuration = 15;
+            currentWordCount = 100;
+            time15.Foreground = Brushes.Gainsboro;
+            previousMode.Foreground = Brushes.DarkSlateGray;
+            previousMode = time15;
             Restart(currentWordCount);
         }
         private void time30_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            currentWordCount = 25;
-            word10.Foreground = Brushes.DarkSlateGray;
-            word25.Foreground = Brushes.Gainsboro;
-            word50.Foreground = Brushes.DarkSlateGray;
-            word100.Foreground = Brushes.DarkSlateGray;
+            mode = "time";
+            testDuration = 30;
+            currentWordCount = 100;
+            time30.Foreground = Brushes.Gainsboro;
+            previousMode.Foreground = Brushes.DarkSlateGray;
+            previousMode = time30;
             Restart(currentWordCount);
         }
         private void time60_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            currentWordCount = 50;
-            word10.Foreground = Brushes.DarkSlateGray;
-            word25.Foreground = Brushes.DarkSlateGray;
-            word50.Foreground = Brushes.Gainsboro;
-            word100.Foreground = Brushes.DarkSlateGray;
+            mode = "time";
+            testDuration = 60;
+            currentWordCount = 100;
+            time60.Foreground = Brushes.Gainsboro;
+            previousMode.Foreground = Brushes.DarkSlateGray;
+            previousMode = time60;
             Restart(currentWordCount);
         }
         private void time120_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            mode = "time";
+            testDuration = 120;
             currentWordCount = 100;
-            word10.Foreground = Brushes.DarkSlateGray;
-            word25.Foreground = Brushes.DarkSlateGray;
-            word50.Foreground = Brushes.DarkSlateGray;
-            word100.Foreground = Brushes.Gainsboro;
+            time120.Foreground = Brushes.Gainsboro;
+            previousMode.Foreground = Brushes.DarkSlateGray;
+            previousMode = time120;
             Restart(currentWordCount);
         }
     }
