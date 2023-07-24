@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -9,13 +10,15 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 
-namespace monkeytype
+namespace typanzee
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        public userSettings userSettings;
+
         public bool testStarted;
         public DateTime startTime;
         public DispatcherTimer wpmTimer = new DispatcherTimer();
@@ -24,6 +27,8 @@ namespace monkeytype
 
         public string typingTest;
         public int charsTyped;
+
+        public float currentWPM;
 
         public int currentWordCount = 25;
 
@@ -34,6 +39,21 @@ namespace monkeytype
         public MainWindow()
         {
             InitializeComponent();
+
+            try
+            {
+                userSettings = LoadSettings();
+            }
+            catch
+            {
+                SaveSettings(new userSettings());
+            }
+
+            if (userSettings == null)
+            {
+                userSettings = new userSettings();
+                SaveSettings(userSettings);
+            }
 
             previousMode = word25;
             
@@ -130,10 +150,7 @@ namespace monkeytype
             TimeSpan currentTime = DateTime.Now.Subtract(startTime);
             if (testStarted && mode == "word" && typedText.Length == typingTest.Length)
             {
-                wpmTimer.Stop();
-                textInput.IsReadOnly = true;
-
-                timeLabel.Content = string.Format("{0:00}:{1:00}.{2:000}", currentTime.Minutes, currentTime.Seconds, currentTime.Milliseconds);
+                EndTest(currentTime);
             }
         }
 
@@ -152,7 +169,9 @@ namespace monkeytype
             {
                 double time = (Convert.ToDouble(currentTime.Minutes) + (Convert.ToDouble(currentTime.Seconds) / 60)) + Convert.ToDouble(currentTime.Milliseconds) / 60000;
 
-                wpmLabel.Content = MathF.Round((float)(Convert.ToDouble(charsTyped) / 5 / time));
+                currentWPM = (float)(Convert.ToDouble(charsTyped) / 5 / time);
+
+                wpmLabel.Content = MathF.Round(currentWPM);
             }
             catch
             {
@@ -161,9 +180,7 @@ namespace monkeytype
 
             if (testStarted && mode == "time" && (currentTime.Seconds + (currentTime.Minutes * 60)) >= testDuration)
             {
-                wpmTimer.Stop();
-                textInput.IsReadOnly = true;
-                timeLabel.Content = string.Format("{0:00}:{1:00}.{2:000}", currentTime.Minutes, currentTime.Seconds, 0);
+                EndTest(currentTime);
             }
         }
 
@@ -179,8 +196,112 @@ namespace monkeytype
             timeLabel.Content = "00:00.000";
             charsTyped = 0;
         }
+        
+        public static userSettings LoadSettings()
+        {
+            string json = File.ReadAllText(@"C:\ProgramData\typanzee\settings.json");
+            return JsonSerializer.Deserialize<userSettings>(json);
+        }
 
-        private void word10_MouseDown(object sender, MouseButtonEventArgs e)
+        public static void SaveSettings(userSettings settings)
+        {
+            string json = JsonSerializer.Serialize(settings);
+            Directory.CreateDirectory(@"C:\ProgramData\typanzee");
+            File.WriteAllText(@"C:\ProgramData\typanzee\settings.json", json);
+        }
+        
+        private void EndTest(TimeSpan currentTime) // why is there no way to do this legitimately
+        {
+            wpmTimer.Stop();
+            textInput.IsReadOnly = true;
+
+            timeLabel.Content = string.Format("{0:00}:{1:00}.{2:000}", currentTime.Minutes, currentTime.Seconds, currentTime.Milliseconds);
+
+            switch (mode)
+            {
+                case "word":
+                {
+                    switch (currentWordCount)
+                    {
+                        case 10:
+                        {
+                            if (currentWPM > userSettings.high10)
+                            {
+                                userSettings.high10 = currentWPM;
+                            }
+                            break;
+                        }
+                        case 25:
+                        {
+                            if (currentWPM > userSettings.high25)
+                            {
+                                userSettings.high25 = currentWPM;
+                            }
+                            break;
+                        }
+                        case 50:
+                        {
+                            if (currentWPM > userSettings.high50)
+                            {
+                                userSettings.high50 = currentWPM;
+                            }
+                            break;
+                        }
+                        case 100:
+                        {
+                            if (currentWPM > userSettings.high100)
+                            {
+                                userSettings.high100 = currentWPM;
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case "time":
+                {
+                    switch (testDuration)
+                    {
+                        case 15:
+                        {
+                            if (currentWPM > userSettings.high15)
+                            {
+                                userSettings.high15 = currentWPM;
+                            }
+                            break;
+                        }
+                        case 30:
+                        {
+                            if (currentWPM > userSettings.high30)
+                            {
+                                userSettings.high30 = currentWPM;
+                            }
+                            break;
+                        }
+                        case 60:
+                        {
+                            if (currentWPM > userSettings.high60)
+                            {
+                                userSettings.high60 = currentWPM;
+                            }
+                            break;
+                        }
+                        case 120:
+                        {
+                            if (currentWPM > userSettings.high120)
+                            {
+                                userSettings.high120 = currentWPM;
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        // all the mousedown bs
+        private void word10_MouseDown(object sender, MouseButtonEventArgs e) // this is all dumb
         {
             mode = "word";
             currentWordCount = 10;
