@@ -9,14 +9,14 @@ namespace typanzee
     public class userSettings
     {
         // highscores
-        public float high10 = 0;
-        public float high25 = 0;
-        public float high50 = 0;
-        public float high100 = 0;
-        public float high15 = 0;
-        public float high30 = 0;
-        public float high60 = 0;
-        public float high120 = 0;
+        public float high10 { get; set; }
+        public float high25 { get; set; }
+        public float high50 { get; set; }
+        public float high100 { get; set; }
+        public float high15 { get; set; }
+        public float high30 { get; set; }
+        public float high60 { get; set; }
+        public float high120 { get; set; }
         
         public userSettings()
         {

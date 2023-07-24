@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -21,14 +22,15 @@ namespace typanzee
 
         public bool testStarted;
         public DateTime startTime;
-        public DispatcherTimer wpmTimer = new DispatcherTimer();
+        public DispatcherTimer wpmTimer = new();
 
-        public string wordList = "the be of and to in he have it that for they with as not on she at by this we you do but from or which one would all will there say who make when can more if no man out other so what time up go about than into could state only new year some take come these know see use get like then first any work now may such give over think most even find day also after way many must look before great back through long where much should well people down own just because good each those feel seem how high too place little world very still nation hand old life tell write become here show house both between need mean call develop under last right move thing general school never same another begin while number part turn real leave might want point form off child few small since against ask late home interest large person end open public follow during present without again hold govern around possible head consider word program problem however lead system set order eye plan run keep face fact group play stand increase early course change help line";
+        private readonly string wordList = "the be of and to in he have it that for they with as not on she at by this we you do but from or which one would all will there say who make when can more if no man out other so what time up go about than into could state only new year some take come these know see use get like then first any work now may such give over think most even find day also after way many must look before great back through long where much should well people down own just because good each those feel seem how high too place little world very still nation hand old life tell write become here show house both between need mean call develop under last right move thing general school never same another begin while number part turn real leave might want point form off child few small since against ask late home interest large person end open public follow during present without again hold govern around possible head consider word program problem however lead system set order eye plan run keep face fact group play stand increase early course change help line";
 
         public string typingTest;
         public int charsTyped;
 
         public float currentWPM;
+        public float currentHigh;
 
         public int currentWordCount = 25;
 
@@ -40,9 +42,11 @@ namespace typanzee
         {
             InitializeComponent();
 
+            userSettings = LoadSettings();
+
             try
             {
-                userSettings = LoadSettings();
+                
             }
             catch
             {
@@ -163,7 +167,7 @@ namespace typanzee
         {
             TimeSpan currentTime = DateTime.Now.Subtract(startTime);
 
-            timeLabel.Content = string.Format("{0:00}:{1:00}.{2:000}", currentTime.Minutes, currentTime.Seconds, currentTime.Milliseconds);
+            timeLabel.Content = $"{currentTime.Minutes:00}:{currentTime.Seconds:00}.{currentTime.Milliseconds:000}";
 
             try
             {
@@ -192,9 +196,11 @@ namespace typanzee
             typingTest = RandomWords(wordList, wordCount);
             typeText.Text = typingTest.ToLower();
             textInput.MaxLength = typingTest.Length;
+            wpmHighLabel.Content = Math.Round(currentHigh);
             wpmTimer.Stop();
             timeLabel.Content = "00:00.000";
             charsTyped = 0;
+            SaveSettings(userSettings);
         }
         
         public static userSettings LoadSettings()
@@ -217,85 +223,64 @@ namespace typanzee
 
             timeLabel.Content = string.Format("{0:00}:{1:00}.{2:000}", currentTime.Minutes, currentTime.Seconds, currentTime.Milliseconds);
 
-            switch (mode)
+            if (currentWPM > currentHigh)
             {
-                case "word":
+                switch (mode)
                 {
-                    switch (currentWordCount)
+                    case "word":
                     {
-                        case 10:
+                        switch (currentWordCount)
                         {
-                            if (currentWPM > userSettings.high10)
+                            case 10:
                             {
                                 userSettings.high10 = currentWPM;
+                                break;
                             }
-                            break;
-                        }
-                        case 25:
-                        {
-                            if (currentWPM > userSettings.high25)
+                            case 25:
                             {
                                 userSettings.high25 = currentWPM;
+                                break;
                             }
-                            break;
-                        }
-                        case 50:
-                        {
-                            if (currentWPM > userSettings.high50)
+                            case 50:
                             {
                                 userSettings.high50 = currentWPM;
+                                break;
                             }
-                            break;
-                        }
-                        case 100:
-                        {
-                            if (currentWPM > userSettings.high100)
+                            case 100:
                             {
                                 userSettings.high100 = currentWPM;
+                                break;
                             }
-                            break;
                         }
+                        break;
                     }
-                    break;
-                }
-                case "time":
-                {
-                    switch (testDuration)
+                    case "time":
                     {
-                        case 15:
+                        switch (testDuration)
                         {
-                            if (currentWPM > userSettings.high15)
+                            case 15:
                             {
                                 userSettings.high15 = currentWPM;
+                                break;
                             }
-                            break;
-                        }
-                        case 30:
-                        {
-                            if (currentWPM > userSettings.high30)
+                            case 30:
                             {
                                 userSettings.high30 = currentWPM;
+                                break;
                             }
-                            break;
-                        }
-                        case 60:
-                        {
-                            if (currentWPM > userSettings.high60)
+                            case 60:
                             {
                                 userSettings.high60 = currentWPM;
+                                break;
                             }
-                            break;
-                        }
-                        case 120:
-                        {
-                            if (currentWPM > userSettings.high120)
+                            case 120:
                             {
                                 userSettings.high120 = currentWPM;
+                                break;
                             }
-                            break;
                         }
+                        break;
                     }
-                    break;
                 }
             }
         }
@@ -305,8 +290,9 @@ namespace typanzee
         {
             mode = "word";
             currentWordCount = 10;
-            word10.Foreground = Brushes.Gainsboro;
+            currentHigh = userSettings.high10;
             previousMode.Foreground = Brushes.DarkSlateGray;
+            word10.Foreground = Brushes.Gainsboro;
             previousMode = word10;
             Restart(currentWordCount);
         }
@@ -314,8 +300,9 @@ namespace typanzee
         {
             mode = "word";
             currentWordCount = 25;
-            word25.Foreground = Brushes.Gainsboro;
+            currentHigh = userSettings.high25;
             previousMode.Foreground = Brushes.DarkSlateGray;
+            word25.Foreground = Brushes.Gainsboro;
             previousMode = word25;
             Restart(currentWordCount);
         }
@@ -323,8 +310,9 @@ namespace typanzee
         {
             mode = "word";
             currentWordCount = 50;
-            word50.Foreground = Brushes.Gainsboro;
+            currentHigh = userSettings.high50;
             previousMode.Foreground = Brushes.DarkSlateGray;
+            word50.Foreground = Brushes.Gainsboro;
             previousMode = word50;
             Restart(currentWordCount);
         }
@@ -332,8 +320,9 @@ namespace typanzee
         {
             mode = "word";
             currentWordCount = 100;
-            word100.Foreground = Brushes.Gainsboro;
+            currentHigh = userSettings.high100;
             previousMode.Foreground = Brushes.DarkSlateGray;
+            word100.Foreground = Brushes.Gainsboro;
             previousMode = word100;
             Restart(currentWordCount);
         }
@@ -343,8 +332,9 @@ namespace typanzee
             mode = "time";
             testDuration = 15;
             currentWordCount = 100;
-            time15.Foreground = Brushes.Gainsboro;
+            currentHigh = userSettings.high15;
             previousMode.Foreground = Brushes.DarkSlateGray;
+            time15.Foreground = Brushes.Gainsboro;
             previousMode = time15;
             Restart(currentWordCount);
         }
@@ -353,8 +343,9 @@ namespace typanzee
             mode = "time";
             testDuration = 30;
             currentWordCount = 100;
-            time30.Foreground = Brushes.Gainsboro;
+            currentHigh = userSettings.high30;
             previousMode.Foreground = Brushes.DarkSlateGray;
+            time30.Foreground = Brushes.Gainsboro;
             previousMode = time30;
             Restart(currentWordCount);
         }
@@ -363,8 +354,9 @@ namespace typanzee
             mode = "time";
             testDuration = 60;
             currentWordCount = 100;
-            time60.Foreground = Brushes.Gainsboro;
+            currentHigh = userSettings.high60;
             previousMode.Foreground = Brushes.DarkSlateGray;
+            time60.Foreground = Brushes.Gainsboro;
             previousMode = time60;
             Restart(currentWordCount);
         }
@@ -373,10 +365,16 @@ namespace typanzee
             mode = "time";
             testDuration = 120;
             currentWordCount = 100;
-            time120.Foreground = Brushes.Gainsboro;
+            currentHigh = userSettings.high120;
             previousMode.Foreground = Brushes.DarkSlateGray;
+            time120.Foreground = Brushes.Gainsboro;
             previousMode = time120;
             Restart(currentWordCount);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            
         }
     }
 }
