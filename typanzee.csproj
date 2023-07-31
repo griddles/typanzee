@@ -23,6 +23,7 @@
       <None Remove="Fonts\RobotoMono-Thin.ttf" />
       <None Remove="Fonts\RobotoMono-ThinItalic.ttf" />
       <None Remove="Images\logo.png" />
+      <None Remove="Images\palette.png" />
       <None Remove="Images\restart.png" />
       <None Remove="Images\time.png" />
       <None Remove="Images\words.png" />
@@ -47,6 +48,7 @@
       <Resource Include="Fonts\RobotoMono-Thin.ttf" />
       <Resource Include="Fonts\RobotoMono-ThinItalic.ttf" />
       <Resource Include="Images\logo.png" />
+      <Resource Include="Images\palette.png" />
       <Resource Include="Images\restart.png" />
       <Resource Include="Images\time.png" />
       <Resource Include="Images\words.png" />

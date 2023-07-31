@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Configuration;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -53,15 +51,17 @@ namespace typanzee
                 SaveSettings(new userSettings());
             }
 
-            if (userSettings == null)
+            if (userSettings == null || userSettings == new userSettings())
             {
                 userSettings = new userSettings();
                 SaveSettings(userSettings);
             }
+            
+            SetColors(userSettings);
 
             previousMode = word25;
             
-            wpmTimer.Tick += new EventHandler(wpmTimer_Tick);
+            wpmTimer.Tick += wpmTimer_Tick;
             wpmTimer.Interval = new TimeSpan(0, 0, 0, 0, 25);
 
             typingTest = RandomWords(wordList, currentWordCount);
@@ -73,23 +73,23 @@ namespace typanzee
         {
             Random random = new Random();
 
-            string[] wordList = words.Split(" ");
-            string[] output = new string[wordCount];
+            string[] wordList = words.Split(" "); // splits apart the words into a list (easier to work with)
+            string[] output = new string[wordCount]; // makes a new list to save the newly generated words in
 
-            int[] last3 = new int[3];
+            int[] last3 = new int[3]; // something to keep track of the last 3 words we generated, to prevent duplicates
 
-            for (int i = 0; i < wordCount; i++)
+            for (int i = 0; i < wordCount; i++) // the stuff inside the brackets here runs once for every word in the wordList
             {
-                int index = random.Next(wordList.Length);
-                while (last3.Contains(index))
+                int index = random.Next(wordList.Length); // gets a random word from the wordList
+                while (last3.Contains(index)) // this while loop just checks if its a duplicate
                 {
                     index = random.Next(wordList.Length);
                 }
-                output[i] = wordList[index];
-                last3[i % 3] = index;
+                output[i] = wordList[index]; // adds the new word to the output list
+                last3[i % 3] = index; // updates the duplicate checking stuff
             }
 
-            return string.Join(" ", output);
+            return string.Join(" ", output); // turns the list into a string (easier to use later) and returns it
         }
 
         private void textInput_TextChanged(object sender, TextChangedEventArgs e)
@@ -141,7 +141,7 @@ namespace typanzee
             {
                 if (typedText[i] == typingTest[i])
                 {
-                    typeText.Inlines.Add(new Run(typedText[i].ToString()) { Foreground = Brushes.DarkSlateGray });
+                    typeText.Inlines.Add(new Run(typedText[i].ToString()) { Foreground = (Brush)new BrushConverter().ConvertFromString(userSettings.tertiary)! });
                 }
                 else
                 {
@@ -149,7 +149,7 @@ namespace typanzee
                 }
             }
 
-            typeText.Inlines.Add(new Run(typingTest.Substring(textInput.Text.Length)) { Foreground = Brushes.Gainsboro });
+            typeText.Inlines.Add(new Run(typingTest.Substring(textInput.Text.Length)) { Foreground = (Brush)new BrushConverter().ConvertFromString(userSettings.primary)! });
 
             TimeSpan currentTime = DateTime.Now.Subtract(startTime);
             if (testStarted && mode == "word" && typedText.Length == typingTest.Length)
@@ -214,6 +214,22 @@ namespace typanzee
             string json = JsonSerializer.Serialize(settings);
             Directory.CreateDirectory(@"C:\ProgramData\typanzee");
             File.WriteAllText(@"C:\ProgramData\typanzee\settings.json", json);
+        }
+
+        public void SetColors(userSettings settings)
+        {
+            BrushConverter convert = new BrushConverter(); // good practice and such
+            
+            typeText.Foreground = (Brush)convert.ConvertFromString(settings.primary)!; // TODO: could potentially cause problems with changing colors mid test, maybe cancel tests before changing colors?
+            logo.Foreground = (Brush)convert.ConvertFromString(settings.secondary)!;
+            logoImg.Fill = (Brush)convert.ConvertFromString(settings.secondary)!;
+            grid.Background = (Brush)convert.ConvertFromString(settings.background)!;
+        }
+        
+        private void palette_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            PaletteEditor paletteEditor = new PaletteEditor();
+            paletteEditor.Show();
         }
         
         private void EndTest(TimeSpan currentTime) // why is there no way to do this legitimately
@@ -376,5 +392,7 @@ namespace typanzee
         {
             
         }
+
+        
     }
 }
