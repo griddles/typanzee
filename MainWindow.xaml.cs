@@ -16,7 +16,7 @@ namespace typanzee
     /// </summary>
     public partial class MainWindow : Window
     {
-        public userSettings userSettings;
+        protected userSettings userSettings;
 
         public bool testStarted;
         public DateTime startTime;
@@ -39,6 +39,7 @@ namespace typanzee
         public MainWindow()
         {
             InitializeComponent();
+            Application.Current.MainWindow = this;
 
             userSettings = LoadSettings();
 

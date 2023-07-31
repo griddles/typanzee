@@ -6,7 +6,7 @@ using Color = System.Drawing.Color;
 
 namespace typanzee;
 
-public partial class PaletteEditor : Window
+public partial class PaletteEditor
 {
     public PaletteEditor()
     {
@@ -19,6 +19,8 @@ public partial class PaletteEditor : Window
         {
             primary.Background = (Brush)new BrushConverter().ConvertFromString(primary.Text)!;
             primary.Foreground = GetContrast(primary.Background);
+            userSettings.primary = primary.Text;
+
         }
         catch
         {
@@ -29,6 +31,7 @@ public partial class PaletteEditor : Window
         {
             secondary.Background = (Brush)new BrushConverter().ConvertFromString(secondary.Text)!;
             secondary.Foreground = GetContrast(secondary.Background);
+            userSettings.secondary = secondary.Text;
         }
         catch
         {
@@ -39,6 +42,7 @@ public partial class PaletteEditor : Window
         {
             tertiary.Background = (Brush)new BrushConverter().ConvertFromString(tertiary.Text)!;
             tertiary.Foreground = GetContrast(tertiary.Background);
+            userSettings.tertiary = tertiary.Text;
         }
         catch
         {
@@ -49,12 +53,15 @@ public partial class PaletteEditor : Window
         {
             background.Background = (Brush)new BrushConverter().ConvertFromString(background.Text)!;
             background.Foreground = GetContrast(background.Background);
+            userSettings.background = background.Text;
         }
         catch
         {
             background.Background = Brushes.Black;
             background.Foreground = Brushes.Red;
         }
+        
+        SetColors(userSettings);
     }
 
     public static Brush GetContrast(Brush brushColor)
