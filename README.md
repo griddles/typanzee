@@ -8,9 +8,9 @@ a local desktop program in c# designed to work like monkeytype
  - restarting tests
  - different test lengths
  - time and words testing modes
+ - save scores locally
 
 ### planned functionality:
- - save scores locally
  - more test types (zen, custom, multiplayer?)
  - custom themes
  - custom fonts
@@ -27,7 +27,7 @@ a local desktop program in c# designed to work like monkeytype
 one day i wondered if you could use monkeytype offline, and found out that you couldn't. so, I wrote this.
 
 #### can I use it?
-not yet, i havent made a proper release build. you can once i do
+download the release and run the .exe
 
 #### can I steal your code?
 yeah
