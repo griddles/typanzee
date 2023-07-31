@@ -6,11 +6,16 @@ using Color = System.Drawing.Color;
 
 namespace typanzee;
 
-public partial class PaletteEditor
+public partial class PaletteEditor : Window
 {
     public PaletteEditor()
     {
         InitializeComponent();
+
+        primary.Text = globalContext.settings.primary;
+        secondary.Text = globalContext.settings.secondary;
+        tertiary.Text = globalContext.settings.tertiary;
+        background.Text = globalContext.settings.background;
     }
 
     public void UpdateColors() // there's probably a better way to do this but it works
@@ -19,7 +24,7 @@ public partial class PaletteEditor
         {
             primary.Background = (Brush)new BrushConverter().ConvertFromString(primary.Text)!;
             primary.Foreground = GetContrast(primary.Background);
-            userSettings.primary = primary.Text;
+            globalContext.settings.primary = primary.Text;
 
         }
         catch
@@ -31,7 +36,7 @@ public partial class PaletteEditor
         {
             secondary.Background = (Brush)new BrushConverter().ConvertFromString(secondary.Text)!;
             secondary.Foreground = GetContrast(secondary.Background);
-            userSettings.secondary = secondary.Text;
+            globalContext.settings.secondary = secondary.Text;
         }
         catch
         {
@@ -42,7 +47,7 @@ public partial class PaletteEditor
         {
             tertiary.Background = (Brush)new BrushConverter().ConvertFromString(tertiary.Text)!;
             tertiary.Foreground = GetContrast(tertiary.Background);
-            userSettings.tertiary = tertiary.Text;
+            globalContext.settings.tertiary = tertiary.Text;
         }
         catch
         {
@@ -53,15 +58,13 @@ public partial class PaletteEditor
         {
             background.Background = (Brush)new BrushConverter().ConvertFromString(background.Text)!;
             background.Foreground = GetContrast(background.Background);
-            userSettings.background = background.Text;
+            globalContext.settings.background = background.Text;
         }
         catch
         {
             background.Background = Brushes.Black;
             background.Foreground = Brushes.Red;
         }
-        
-        SetColors(userSettings);
     }
 
     public static Brush GetContrast(Brush brushColor)
@@ -99,6 +102,9 @@ public partial class PaletteEditor
 
     private void background_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
     {
-        UpdateColors();
+        if (background != null)
+        {
+            UpdateColors();
+        }
     }
 }

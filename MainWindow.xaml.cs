@@ -16,8 +16,6 @@ namespace typanzee
     /// </summary>
     public partial class MainWindow : Window
     {
-        protected userSettings userSettings;
-
         public bool testStarted;
         public DateTime startTime;
         public DispatcherTimer wpmTimer = new();
@@ -41,24 +39,15 @@ namespace typanzee
             InitializeComponent();
             Application.Current.MainWindow = this;
 
-            userSettings = LoadSettings();
+            globalContext.settings = LoadSettings();
 
-            try
+            if (globalContext.settings == null || globalContext.settings == new userSettings())
             {
-                
-            }
-            catch
-            {
-                SaveSettings(new userSettings());
-            }
-
-            if (userSettings == null || userSettings == new userSettings())
-            {
-                userSettings = new userSettings();
-                SaveSettings(userSettings);
+                globalContext.settings = new userSettings();
+                SaveSettings();
             }
             
-            SetColors(userSettings);
+            SetColors();
 
             previousMode = word25;
             
@@ -142,7 +131,7 @@ namespace typanzee
             {
                 if (typedText[i] == typingTest[i])
                 {
-                    typeText.Inlines.Add(new Run(typedText[i].ToString()) { Foreground = (Brush)new BrushConverter().ConvertFromString(userSettings.tertiary)! });
+                    typeText.Inlines.Add(new Run(typedText[i].ToString()) { Foreground = (Brush)new BrushConverter().ConvertFromString(globalContext.settings.tertiary)! });
                 }
                 else
                 {
@@ -150,7 +139,7 @@ namespace typanzee
                 }
             }
 
-            typeText.Inlines.Add(new Run(typingTest.Substring(textInput.Text.Length)) { Foreground = (Brush)new BrushConverter().ConvertFromString(userSettings.primary)! });
+            typeText.Inlines.Add(new Run(typingTest.Substring(textInput.Text.Length)) { Foreground = (Brush)new BrushConverter().ConvertFromString(globalContext.settings.primary)! });
 
             TimeSpan currentTime = DateTime.Now.Subtract(startTime);
             if (testStarted && mode == "word" && typedText.Length == typingTest.Length)
@@ -201,24 +190,27 @@ namespace typanzee
             wpmTimer.Stop();
             timeLabel.Content = "00:00.000";
             charsTyped = 0;
-            SaveSettings(userSettings);
+            SetColors();
+            SaveSettings();
         }
         
         public static userSettings LoadSettings()
         {
             string json = File.ReadAllText(@"C:\ProgramData\typanzee\settings.json");
-            return JsonSerializer.Deserialize<userSettings>(json);
+            return JsonSerializer.Deserialize<userSettings>(json)!;
         }
 
-        public static void SaveSettings(userSettings settings)
+        public static void SaveSettings()
         {
-            string json = JsonSerializer.Serialize(settings);
+            string json = JsonSerializer.Serialize(globalContext.settings);
             Directory.CreateDirectory(@"C:\ProgramData\typanzee");
             File.WriteAllText(@"C:\ProgramData\typanzee\settings.json", json);
         }
 
-        public void SetColors(userSettings settings)
+        public void SetColors()
         {
+            userSettings settings = globalContext.settings;
+            
             BrushConverter convert = new BrushConverter(); // good practice and such
             
             typeText.Foreground = (Brush)convert.ConvertFromString(settings.primary)!; // TODO: could potentially cause problems with changing colors mid test, maybe cancel tests before changing colors?
@@ -250,22 +242,22 @@ namespace typanzee
                         {
                             case 10:
                             {
-                                userSettings.high10 = currentWPM;
+                                globalContext.settings.high10 = currentWPM;
                                 break;
                             }
                             case 25:
                             {
-                                userSettings.high25 = currentWPM;
+                                globalContext.settings.high25 = currentWPM;
                                 break;
                             }
                             case 50:
                             {
-                                userSettings.high50 = currentWPM;
+                                globalContext.settings.high50 = currentWPM;
                                 break;
                             }
                             case 100:
                             {
-                                userSettings.high100 = currentWPM;
+                                globalContext.settings.high100 = currentWPM;
                                 break;
                             }
                         }
@@ -277,22 +269,22 @@ namespace typanzee
                         {
                             case 15:
                             {
-                                userSettings.high15 = currentWPM;
+                                globalContext.settings.high15 = currentWPM;
                                 break;
                             }
                             case 30:
                             {
-                                userSettings.high30 = currentWPM;
+                                globalContext.settings.high30 = currentWPM;
                                 break;
                             }
                             case 60:
                             {
-                                userSettings.high60 = currentWPM;
+                                globalContext.settings.high60 = currentWPM;
                                 break;
                             }
                             case 120:
                             {
-                                userSettings.high120 = currentWPM;
+                                globalContext.settings.high120 = currentWPM;
                                 break;
                             }
                         }
@@ -307,7 +299,7 @@ namespace typanzee
         {
             mode = "word";
             currentWordCount = 10;
-            currentHigh = userSettings.high10;
+            currentHigh = globalContext.settings.high10;
             previousMode.Foreground = Brushes.DarkSlateGray;
             word10.Foreground = Brushes.Gainsboro;
             previousMode = word10;
@@ -317,7 +309,7 @@ namespace typanzee
         {
             mode = "word";
             currentWordCount = 25;
-            currentHigh = userSettings.high25;
+            currentHigh = globalContext.settings.high25;
             previousMode.Foreground = Brushes.DarkSlateGray;
             word25.Foreground = Brushes.Gainsboro;
             previousMode = word25;
@@ -327,7 +319,7 @@ namespace typanzee
         {
             mode = "word";
             currentWordCount = 50;
-            currentHigh = userSettings.high50;
+            currentHigh = globalContext.settings.high50;
             previousMode.Foreground = Brushes.DarkSlateGray;
             word50.Foreground = Brushes.Gainsboro;
             previousMode = word50;
@@ -337,7 +329,7 @@ namespace typanzee
         {
             mode = "word";
             currentWordCount = 100;
-            currentHigh = userSettings.high100;
+            currentHigh = globalContext.settings.high100;
             previousMode.Foreground = Brushes.DarkSlateGray;
             word100.Foreground = Brushes.Gainsboro;
             previousMode = word100;
@@ -349,7 +341,7 @@ namespace typanzee
             mode = "time";
             testDuration = 15;
             currentWordCount = 100;
-            currentHigh = userSettings.high15;
+            currentHigh = globalContext.settings.high15;
             previousMode.Foreground = Brushes.DarkSlateGray;
             time15.Foreground = Brushes.Gainsboro;
             previousMode = time15;
@@ -360,7 +352,7 @@ namespace typanzee
             mode = "time";
             testDuration = 30;
             currentWordCount = 100;
-            currentHigh = userSettings.high30;
+            currentHigh = globalContext.settings.high30;
             previousMode.Foreground = Brushes.DarkSlateGray;
             time30.Foreground = Brushes.Gainsboro;
             previousMode = time30;
@@ -371,7 +363,7 @@ namespace typanzee
             mode = "time";
             testDuration = 60;
             currentWordCount = 100;
-            currentHigh = userSettings.high60;
+            currentHigh = globalContext.settings.high60;
             previousMode.Foreground = Brushes.DarkSlateGray;
             time60.Foreground = Brushes.Gainsboro;
             previousMode = time60;
@@ -382,7 +374,7 @@ namespace typanzee
             mode = "time";
             testDuration = 120;
             currentWordCount = 100;
-            currentHigh = userSettings.high120;
+            currentHigh = globalContext.settings.high120;
             previousMode.Foreground = Brushes.DarkSlateGray;
             time120.Foreground = Brushes.Gainsboro;
             previousMode = time120;
@@ -393,7 +385,5 @@ namespace typanzee
         {
             
         }
-
-        
     }
 }
