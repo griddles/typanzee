@@ -21,15 +21,17 @@ namespace typanzee
         
         public string primary { get; set; }
         public string secondary { get; set; }
-        public string tertiary { get; set; }
+        public string dimmed { get; set; }
+        public string accent { get; set; }
         public string background { get; set; }
         
         public userSettings()
         {
-            primary = Brushes.Gainsboro.ToString();
-            secondary = Brushes.Gainsboro.ToString();
-            tertiary = Brushes.DarkSlateGray.ToString();
-            background = Brushes.Black.ToString();
+            primary = Brushes.Gainsboro.ToString(); // for the untyped text only
+            secondary = Brushes.Gainsboro.ToString(); // for highlighted elements
+            dimmed = Brushes.DarkSlateGray.ToString(); // for dimmed elements
+            accent = Brushes.Gainsboro.ToString(); // for accent elements such as the logo
+            background = Brushes.Black.ToString(); // for the background
         }
 
         // ignore the static i dont know what it means either i just put it there when the error messages tell me to

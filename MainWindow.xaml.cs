@@ -32,7 +32,14 @@ namespace typanzee
 
         public string mode = "word";
         public Label previousMode;
+        public Label[] modeButtons;
         public int testDuration = 30;
+
+        public Brush primary;
+        public Brush secondary;
+        public Brush dimmed;
+        public Brush accent;
+        public Brush background;
 
         public MainWindow()
         {
@@ -41,15 +48,19 @@ namespace typanzee
 
             globalContext.settings = LoadSettings();
 
-            if (globalContext.settings == null || globalContext.settings == new userSettings())
-            {
-                globalContext.settings = new userSettings();
-                SaveSettings();
-            }
+            SaveSettings();
+
+            BrushConverter convert = new BrushConverter(); // good practice and such
+            primary = (Brush)convert.ConvertFromString(globalContext.settings.primary)!;
+            secondary = (Brush)convert.ConvertFromString(globalContext.settings.secondary)!;
+            dimmed = (Brush)convert.ConvertFromString(globalContext.settings.dimmed)!;
+            accent = (Brush)convert.ConvertFromString(globalContext.settings.accent)!;
+            background = (Brush)convert.ConvertFromString(globalContext.settings.background)!;
             
             SetColors();
 
             previousMode = word25;
+            modeButtons = new[] { word10, word25, word50, word100, time15, time30, time60, time120 };
             
             wpmTimer.Tick += wpmTimer_Tick;
             wpmTimer.Interval = new TimeSpan(0, 0, 0, 0, 25);
@@ -131,7 +142,7 @@ namespace typanzee
             {
                 if (typedText[i] == typingTest[i])
                 {
-                    typeText.Inlines.Add(new Run(typedText[i].ToString()) { Foreground = (Brush)new BrushConverter().ConvertFromString(globalContext.settings.tertiary)! });
+                    typeText.Inlines.Add(new Run(typedText[i].ToString()) { Foreground = dimmed });
                 }
                 else
                 {
@@ -139,7 +150,7 @@ namespace typanzee
                 }
             }
 
-            typeText.Inlines.Add(new Run(typingTest.Substring(textInput.Text.Length)) { Foreground = (Brush)new BrushConverter().ConvertFromString(globalContext.settings.primary)! });
+            typeText.Inlines.Add(new Run(typingTest.Substring(textInput.Text.Length)) { Foreground = primary });
 
             TimeSpan currentTime = DateTime.Now.Subtract(startTime);
             if (testStarted && mode == "word" && typedText.Length == typingTest.Length)
@@ -197,7 +208,14 @@ namespace typanzee
         public static userSettings LoadSettings()
         {
             string json = File.ReadAllText(@"C:\ProgramData\typanzee\settings.json");
-            return JsonSerializer.Deserialize<userSettings>(json)!;
+            try
+            {
+                return JsonSerializer.Deserialize<userSettings>(json)!;
+            }
+            catch
+            {
+                return new userSettings();
+            }
         }
 
         public static void SaveSettings()
@@ -209,14 +227,37 @@ namespace typanzee
 
         public void SetColors()
         {
-            userSettings settings = globalContext.settings;
-            
-            BrushConverter convert = new BrushConverter(); // good practice and such
-            
-            typeText.Foreground = (Brush)convert.ConvertFromString(settings.primary)!; // TODO: could potentially cause problems with changing colors mid test, maybe cancel tests before changing colors?
-            logo.Foreground = (Brush)convert.ConvertFromString(settings.secondary)!;
-            logoImg.Fill = (Brush)convert.ConvertFromString(settings.secondary)!;
-            grid.Background = (Brush)convert.ConvertFromString(settings.background)!;
+            typeText.Foreground = primary;
+            logo.Foreground = secondary;
+            logoImg.Fill = accent;
+            timeLabel.Foreground = secondary;
+            wpmLabel.Foreground = secondary;
+            highscoreLabel.Foreground = secondary;
+            wpmHighLabel.Foreground = secondary;
+            restartButton.Fill = accent;
+            palette.Fill = accent;
+            wordIcon.Fill = accent;
+            timeIcon.Fill = accent;
+            grid.Background = background;
+
+            try
+            {
+                foreach (Label label in modeButtons)
+                {
+                    if (previousMode == label)
+                    {
+                        label.Foreground = secondary;
+                    }
+                    else
+                    {
+                        label.Foreground = dimmed;
+                    }
+                }
+            }
+            catch
+            {
+                // do literally 0 things (the modeButtons are still initializing)
+            }
         }
         
         private void palette_MouseDown(object sender, MouseButtonEventArgs e)
@@ -300,8 +341,8 @@ namespace typanzee
             mode = "word";
             currentWordCount = 10;
             currentHigh = globalContext.settings.high10;
-            previousMode.Foreground = Brushes.DarkSlateGray;
-            word10.Foreground = Brushes.Gainsboro;
+            previousMode.Foreground = dimmed;
+            word10.Foreground = secondary;
             previousMode = word10;
             Restart(currentWordCount);
         }
@@ -310,8 +351,8 @@ namespace typanzee
             mode = "word";
             currentWordCount = 25;
             currentHigh = globalContext.settings.high25;
-            previousMode.Foreground = Brushes.DarkSlateGray;
-            word25.Foreground = Brushes.Gainsboro;
+            previousMode.Foreground = dimmed;
+            word25.Foreground = secondary;
             previousMode = word25;
             Restart(currentWordCount);
         }
@@ -320,8 +361,8 @@ namespace typanzee
             mode = "word";
             currentWordCount = 50;
             currentHigh = globalContext.settings.high50;
-            previousMode.Foreground = Brushes.DarkSlateGray;
-            word50.Foreground = Brushes.Gainsboro;
+            previousMode.Foreground = dimmed;
+            word50.Foreground = secondary;
             previousMode = word50;
             Restart(currentWordCount);
         }
@@ -330,8 +371,8 @@ namespace typanzee
             mode = "word";
             currentWordCount = 100;
             currentHigh = globalContext.settings.high100;
-            previousMode.Foreground = Brushes.DarkSlateGray;
-            word100.Foreground = Brushes.Gainsboro;
+            previousMode.Foreground = dimmed;
+            word100.Foreground = secondary;
             previousMode = word100;
             Restart(currentWordCount);
         }
@@ -342,8 +383,8 @@ namespace typanzee
             testDuration = 15;
             currentWordCount = 100;
             currentHigh = globalContext.settings.high15;
-            previousMode.Foreground = Brushes.DarkSlateGray;
-            time15.Foreground = Brushes.Gainsboro;
+            previousMode.Foreground = dimmed;
+            time15.Foreground = secondary;
             previousMode = time15;
             Restart(currentWordCount);
         }
@@ -353,8 +394,8 @@ namespace typanzee
             testDuration = 30;
             currentWordCount = 100;
             currentHigh = globalContext.settings.high30;
-            previousMode.Foreground = Brushes.DarkSlateGray;
-            time30.Foreground = Brushes.Gainsboro;
+            previousMode.Foreground = dimmed;
+            time30.Foreground = secondary;
             previousMode = time30;
             Restart(currentWordCount);
         }
@@ -364,8 +405,8 @@ namespace typanzee
             testDuration = 60;
             currentWordCount = 100;
             currentHigh = globalContext.settings.high60;
-            previousMode.Foreground = Brushes.DarkSlateGray;
-            time60.Foreground = Brushes.Gainsboro;
+            previousMode.Foreground = dimmed;
+            time60.Foreground = secondary;
             previousMode = time60;
             Restart(currentWordCount);
         }
@@ -375,8 +416,8 @@ namespace typanzee
             testDuration = 120;
             currentWordCount = 100;
             currentHigh = globalContext.settings.high120;
-            previousMode.Foreground = Brushes.DarkSlateGray;
-            time120.Foreground = Brushes.Gainsboro;
+            previousMode.Foreground = dimmed;
+            time120.Foreground = secondary;
             previousMode = time120;
             Restart(currentWordCount);
         }

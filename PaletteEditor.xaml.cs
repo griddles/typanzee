@@ -14,57 +14,9 @@ public partial class PaletteEditor : Window
 
         primary.Text = globalContext.settings.primary;
         secondary.Text = globalContext.settings.secondary;
-        tertiary.Text = globalContext.settings.tertiary;
+        dimmed.Text = globalContext.settings.dimmed;
+        accent.Text = globalContext.settings.accent;
         background.Text = globalContext.settings.background;
-    }
-
-    public void UpdateColors() // there's probably a better way to do this but it works
-    {
-        try
-        {
-            primary.Background = (Brush)new BrushConverter().ConvertFromString(primary.Text)!;
-            primary.Foreground = GetContrast(primary.Background);
-            globalContext.settings.primary = primary.Text;
-
-        }
-        catch
-        {
-            primary.Background = Brushes.Black;
-            primary.Foreground = Brushes.Red;
-        }
-        try
-        {
-            secondary.Background = (Brush)new BrushConverter().ConvertFromString(secondary.Text)!;
-            secondary.Foreground = GetContrast(secondary.Background);
-            globalContext.settings.secondary = secondary.Text;
-        }
-        catch
-        {
-            secondary.Background = Brushes.Black;
-            secondary.Foreground = Brushes.Red;
-        }
-        try
-        {
-            tertiary.Background = (Brush)new BrushConverter().ConvertFromString(tertiary.Text)!;
-            tertiary.Foreground = GetContrast(tertiary.Background);
-            globalContext.settings.tertiary = tertiary.Text;
-        }
-        catch
-        {
-            tertiary.Background = Brushes.Black;
-            tertiary.Foreground = Brushes.Red;
-        }
-        try
-        {
-            background.Background = (Brush)new BrushConverter().ConvertFromString(background.Text)!;
-            background.Foreground = GetContrast(background.Background);
-            globalContext.settings.background = background.Text;
-        }
-        catch
-        {
-            background.Background = Brushes.Black;
-            background.Foreground = Brushes.Red;
-        }
     }
 
     public static Brush GetContrast(Brush brushColor)
@@ -78,33 +30,77 @@ public partial class PaletteEditor : Window
 
     private void primary_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
     {
-        if (background != null) // this runs when primary gets initialized, which is before background gets initialized, so make sure that it only runs when background is initialized
+        try
         {
-            UpdateColors();
+            primary.Background = (Brush)new BrushConverter().ConvertFromString(primary.Text)!;
+            primary.Foreground = GetContrast(primary.Background);
+            globalContext.settings.primary = primary.Text;
+
+        }
+        catch
+        {
+            primary.Background = Brushes.Black;
+            primary.Foreground = Brushes.Red;
         }
     }
 
     private void secondary_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
     {
-        if (background != null)
+        try
         {
-            UpdateColors();
+            secondary.Background = (Brush)new BrushConverter().ConvertFromString(secondary.Text)!;
+            secondary.Foreground = GetContrast(secondary.Background);
+            globalContext.settings.secondary = secondary.Text;
+        }
+        catch
+        {
+            secondary.Background = Brushes.Black;
+            secondary.Foreground = Brushes.Red;
         }
     }
 
-    private void tertiary_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+    private void dimmed_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
     {
-        if (background != null)
+        try
         {
-            UpdateColors();
+            dimmed.Background = (Brush)new BrushConverter().ConvertFromString(dimmed.Text)!;
+            dimmed.Foreground = GetContrast(dimmed.Background);
+            globalContext.settings.dimmed = dimmed.Text;
+        }
+        catch
+        {
+            dimmed.Background = Brushes.Black;
+            dimmed.Foreground = Brushes.Red;
+        }
+    }
+
+    private void accent_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+    {
+        try
+        {
+            accent.Background = (Brush)new BrushConverter().ConvertFromString(accent.Text)!;
+            accent.Foreground = GetContrast(accent.Background);
+            globalContext.settings.accent = accent.Text;
+        }
+        catch
+        {
+            dimmed.Background = Brushes.Black;
+            dimmed.Foreground = Brushes.Red;
         }
     }
 
     private void background_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
     {
-        if (background != null)
+        try
         {
-            UpdateColors();
+            background.Background = (Brush)new BrushConverter().ConvertFromString(background.Text)!;
+            background.Foreground = GetContrast(background.Background);
+            globalContext.settings.background = background.Text;
+        }
+        catch
+        {
+            background.Background = Brushes.Black;
+            background.Foreground = Brushes.Red;
         }
     }
 }
