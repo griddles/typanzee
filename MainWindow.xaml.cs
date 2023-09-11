@@ -14,7 +14,7 @@ namespace typanzee
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public unsafe partial class MainWindow : Window
     {
         public bool testStarted;
         public DateTime startTime;
@@ -116,6 +116,7 @@ namespace typanzee
                     textInput.Text = textInput.Text.Substring(line1Index);
                     textInput.CaretIndex = textInput.Text.Length;
                 }
+
                 if (typingTest.Length < 800 && mode == "time")
                 {
                     typingTest += " " + RandomWords(wordList, 25);
@@ -125,7 +126,6 @@ namespace typanzee
             {
                 // do nothing lol
             }
-            
 
             if (!testStarted)
             {
@@ -140,14 +140,9 @@ namespace typanzee
 
             for (int i = 0; i < typedText.Length; i++)
             {
-                if (typedText[i] == typingTest[i])
-                {
-                    typeText.Inlines.Add(new Run(typedText[i].ToString()) { Foreground = dimmed });
-                }
-                else
-                {
-                    typeText.Inlines.Add(new Run(typedText[i].ToString()) { Foreground = Brushes.Red });
-                }
+                typeText.Inlines.Add(typedText[i] == typingTest[i]
+                    ? new Run(typedText[i].ToString()) { Foreground = dimmed }
+                    : new Run(typedText[i].ToString()) { Foreground = Brushes.Red });
             }
 
             typeText.Inlines.Add(new Run(typingTest.Substring(textInput.Text.Length)) { Foreground = primary });
@@ -244,14 +239,7 @@ namespace typanzee
             {
                 foreach (Label label in modeButtons)
                 {
-                    if (previousMode == label)
-                    {
-                        label.Foreground = secondary;
-                    }
-                    else
-                    {
-                        label.Foreground = dimmed;
-                    }
+                    label.Foreground = previousMode == label ? secondary : dimmed;
                 }
             }
             catch
@@ -271,7 +259,7 @@ namespace typanzee
             wpmTimer.Stop();
             textInput.IsReadOnly = true;
 
-            timeLabel.Content = string.Format("{0:00}:{1:00}.{2:000}", currentTime.Minutes, currentTime.Seconds, currentTime.Milliseconds);
+            timeLabel.Content = $"{currentTime.Minutes:00}:{currentTime.Seconds:00}.{currentTime.Milliseconds:000}";
 
             if (currentWPM > currentHigh)
             {
