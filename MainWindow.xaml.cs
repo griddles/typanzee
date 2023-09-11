@@ -68,6 +68,13 @@ namespace typanzee
             typingTest = RandomWords(wordList, currentWordCount);
             typeText.Text = typingTest.ToLower();
             textInput.MaxLength = typingTest.Length;
+            
+            // maybe itll work here
+            
+            foreach (Label label in modeButtons)
+            {
+                label.Foreground = previousMode == label ? secondary : dimmed;
+            }
         }
 
         public string RandomWords(string words, int wordCount)
@@ -198,6 +205,16 @@ namespace typanzee
             charsTyped = 0;
             SetColors();
             SaveSettings();
+        }
+        
+        public void RestartOpen(object sender, ExecutedRoutedEventArgs e)
+        {
+            Restart(currentWordCount);
+        }
+ 
+        public void CanRestart(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
         }
         
         public static userSettings LoadSettings()
