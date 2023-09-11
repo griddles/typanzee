@@ -57,7 +57,7 @@ namespace typanzee
             accent = (Brush)convert.ConvertFromString(globalContext.settings.accent)!;
             background = (Brush)convert.ConvertFromString(globalContext.settings.background)!;
             
-            SetColors();
+            
 
             previousMode = word25;
             modeButtons = new[] { word10, word25, word50, word100, time15, time30, time60, time120 };
@@ -68,6 +68,8 @@ namespace typanzee
             typingTest = RandomWords(wordList, currentWordCount);
             typeText.Text = typingTest.ToLower();
             textInput.MaxLength = typingTest.Length;
+            
+            SetColors();
         }
 
         public string RandomWords(string words, int wordCount)
@@ -200,6 +202,16 @@ namespace typanzee
             SaveSettings();
         }
         
+        public void RestartOpen(object sender, ExecutedRoutedEventArgs e)
+        {
+            Restart(currentWordCount);
+        }
+ 
+        public void CanRestart(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+        
         public static userSettings LoadSettings()
         {
             string json = File.ReadAllText(@"C:\ProgramData\typanzee\settings.json");
@@ -234,17 +246,10 @@ namespace typanzee
             wordIcon.Fill = accent;
             timeIcon.Fill = accent;
             grid.Background = background;
-
-            try
+            
+            foreach (Label label in modeButtons)
             {
-                foreach (Label label in modeButtons)
-                {
-                    label.Foreground = previousMode == label ? secondary : dimmed;
-                }
-            }
-            catch
-            {
-                // do literally 0 things (the modeButtons are still initializing)
+                label.Foreground = previousMode == label ? secondary : dimmed;
             }
         }
         

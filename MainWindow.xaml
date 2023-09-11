@@ -10,6 +10,14 @@
             <Setter Property="TextElement.FontFamily" Value="Fonts/#Roboto Mono"/>
         </Style>
     </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open"
+                        Executed="RestartOpen"
+                        CanExecute="CanRestart"/>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Command="ApplicationCommands.Open" Key="Tab" />
+    </Window.InputBindings>
     <Grid x:Name="grid" Background="black">
         <Label x:Name="logo" Content="typanzee" Style="{DynamicResource RobotoMono}" FontSize="54" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Height="80" Width="275" Margin="110,10,0,0" Foreground="Gainsboro" />
         <Rectangle x:Name="logoImg" HorizontalAlignment="Left" Height="100" Margin="10,-10,0,0" Stroke="Black" VerticalAlignment="Top" Width="100" Fill="Gainsboro">
@@ -51,7 +59,5 @@
         <Label x:Name="time120" Content="120" Style="{DynamicResource RobotoMono}" HorizontalAlignment="Left" Margin="230,0,0,63" VerticalAlignment="Bottom" Foreground="DarkSlateGray" Height="48" Width="74" FontSize="32" MouseDown="time120_MouseDown"/>
         <Label x:Name="wpmHighLabel" Content="0" Style="{DynamicResource RobotoMono}" HorizontalAlignment="Right" Height="80" VerticalAlignment="Bottom" Width="130" Foreground="Gainsboro" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontSize="48" Margin="0,0,10,10"/>
         <Label x:Name="highscoreLabel" Content="High:" Style="{DynamicResource RobotoMono}" HorizontalAlignment="Right" Height="80" VerticalAlignment="Bottom" Width="161" Foreground="Gainsboro" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="48" Margin="0,0,145,10"/>
-        
-
     </Grid>
 </Window>
