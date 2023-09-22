@@ -56,8 +56,6 @@ namespace typanzee
             dimmed = (Brush)convert.ConvertFromString(globalContext.settings.dimmed)!;
             accent = (Brush)convert.ConvertFromString(globalContext.settings.accent)!;
             background = (Brush)convert.ConvertFromString(globalContext.settings.background)!;
-            
-            
 
             previousMode = word25;
             modeButtons = new[] { word10, word25, word50, word100, time15, time30, time60, time120 };
@@ -214,9 +212,9 @@ namespace typanzee
         
         public static userSettings LoadSettings()
         {
-            string json = File.ReadAllText(@"C:\ProgramData\typanzee\settings.json");
             try
             {
+                string json = File.ReadAllText(@"C:\ProgramData\typanzee\settings.json");
                 return JsonSerializer.Deserialize<userSettings>(json)!;
             }
             catch
